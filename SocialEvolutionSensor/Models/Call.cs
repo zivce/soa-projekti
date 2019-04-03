@@ -1,0 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace SocialEvolutionSensor.Models
+{
+    public class Call
+    {
+        public string Id { get; set; }
+        public DateTime TimeStamp { get; set; }
+        public int Duration { get; set; }
+        public string DestUserId { get; set; }
+        public string DestPhoneHash { get; set; }
+    }
+}
