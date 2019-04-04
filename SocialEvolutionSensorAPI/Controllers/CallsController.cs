@@ -7,6 +7,7 @@ using CsvHelper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SocialEvolutionSensor.Models;
+using SocialEvolutionSensorAPI.Services;
 
 namespace SocialEvolutionSensorAPI.Controllers
 {
@@ -14,28 +15,15 @@ namespace SocialEvolutionSensorAPI.Controllers
     [Route("api/Calls")]
     public class CallsController : Controller
     {
-        private static List<Call> getCalls()
-        {
-            List<Call> calls = new List<Call>();
-            using (var reader = new StreamReader("..\\..\\..\\SensorData\\Calls.csv"))
-            using (var csv = new CsvReader(reader))
-            {
-                csv.Configuration.HasHeaderRecord = true;
-                csv.Read();
-                while (csv.Read())
-                {
-                    var record = csv.GetRecord<Call>();
-                    calls.Add(record);
-                }
-            }
-            return calls;
+        private ICallsDataService _callsDataService;
+        public CallsController(ICallsDataService callDataService) {
+            _callsDataService = callDataService;
         }
-
         // GET: api/Calls
         [HttpGet]
         public IEnumerable<Call> Get()
         {
-            return getCalls();
+            return _callsDataService.getLatest();
         }
 
         // GET: api/Calls/5
