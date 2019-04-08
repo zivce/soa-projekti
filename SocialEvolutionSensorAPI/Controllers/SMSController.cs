@@ -12,34 +12,34 @@ using SocialEvolutionSensorAPI.Services;
 namespace SocialEvolutionSensorAPI.Controllers
 {
     [Produces("application/json")]
-    [Route("api/Calls")]
-    public class CallsController : Controller
+    [Route("api/SMSs")]
+    public class SMSsController : Controller
     {
-        private ICallsDataService _callsDataService;
-        public CallsController(ICallsDataService callDataService) {
-            _callsDataService = callDataService;
+        private ISMSsDataService _SMSsDataService;
+        public SMSsController(ISMSsDataService smsDataService) {
+            _SMSsDataService = smsDataService;
         }
-        // GET: api/Calls
+        // GET: api/SMSs
         [HttpGet]
-        public IEnumerable<Call> Get()
+        public IEnumerable<SMS> Get()
         {
-            return _callsDataService.getLatest();
+            return _SMSsDataService.getLatest();
         }
 
-        // GET: api/Calls/5
-        [HttpGet("{id}", Name = "GetCall")]
+        // GET: api/SMSs/5
+        [HttpGet("{id}", Name = "GetSMS")]
         public string Get(int id)
         {
             return "value";
         }
         
-        // POST: api/Calls
+        // POST: api/SMSs
         [HttpPost]
         public void Post([FromBody]string value)
         {
         }
         
-        // PUT: api/Calls/5
+        // PUT: api/SMSs/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody]string value)
         {

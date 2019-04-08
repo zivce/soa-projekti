@@ -1,0 +1,13 @@
+﻿using SocialEvolutionSensor.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace SocialEvolutionSensorAPI.Services
+{
+    public interface ISMSsDataService
+    {
+        List<SMS> getLatest();
+    }
+}

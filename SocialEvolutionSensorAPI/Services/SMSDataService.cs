@@ -8,30 +8,30 @@ using System.Threading.Tasks;
 
 namespace SocialEvolutionSensorAPI.Services
 {
-    public class CallsDataService: ICallsDataService
+    public class SMSsDataService: ISMSsDataService
     {
         private const int step = 100;
-        private List<Call> callRecords;
+        private List<SMS> SMSRecords;
         private int latestIndex;
-        public CallsDataService()
+        public SMSsDataService()
         {
             latestIndex = 0;
-            callRecords = new List<Call>();
-            using (var reader = new StreamReader("SensorData/Calls.csv"))
+            SMSRecords = new List<SMS>();
+            using (var reader = new StreamReader("SensorData/SMS.csv"))
             using (var csv = new CsvReader(reader))
             {
                 csv.Configuration.HasHeaderRecord = true;
                 while (csv.Read())
                 {
-                    var record = csv.GetRecord<Call>();
-                    callRecords.Add(record);
+                    var record = csv.GetRecord<SMS>();
+                    SMSRecords.Add(record);
                 }
             }
         }
 
-        public List<Call> getLatest()
+        public List<SMS> getLatest()
         {
-            var records =  callRecords.GetRange(latestIndex, step);
+            var records =  SMSRecords.GetRange(latestIndex, step);
             latestIndex += step;
             return records;
         }

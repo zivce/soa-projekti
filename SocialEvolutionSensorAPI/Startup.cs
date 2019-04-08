@@ -25,6 +25,7 @@ namespace SocialEvolutionSensorAPI
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddSingleton<ICallsDataService, CallsDataService>();
+            services.AddSingleton<ISMSsDataService, SMSsDataService>();
             services.AddMvc();
             
         }
