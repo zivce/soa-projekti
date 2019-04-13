@@ -4,11 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-namespace SocialEvolutionService.Controllers
+namespace SocialEvolutionDataCollector.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class DataCollectorController : ControllerBase
     {
         // GET api/values
         [HttpGet]
