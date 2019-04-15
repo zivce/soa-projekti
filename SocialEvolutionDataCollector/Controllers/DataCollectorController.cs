@@ -3,43 +3,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using SocialEvolutionDataCollector.Services;
 
 namespace SocialEvolutionDataCollector.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/DataCollector")]
     [ApiController]
     public class DataCollectorController : ControllerBase
     {
-        // GET api/values
+        private string _endpointURL = "http://localhost:55834/api/Calls";
+
+        private IDataCollectorService _dataCollectorService;
+
+        public DataCollectorController(IDataCollectorService dataCollectorService){
+            _dataCollectorService = dataCollectorService;
+        }
+
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult<string> Get()
         {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/values/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            var collectedData = _dataCollectorService.CollectData(_endpointURL);
+            var res = _dataCollectorService.PersistData(collectedData);
+            return "Radiii";
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Net.;
 using System.Linq;
 using SocialEvolutionDataCollector.Models;
 using Microsoft.Extensions.Configuration;
@@ -6,46 +7,22 @@ using MongoDB.Driver;
 
 namespace SocialEvolutionDataCollector.Services
 {
-    public class DataCollectorService
+    public class DataCollectorService : IDataCollectorService
     {
-        private readonly IMongoCollection<Book> _books;
+        private readonly HttpClient _client = new HttpClient();
 
-        public DataCollectorService(IConfiguration config)
+        public void CollectDataAsync(string url)
         {
-            var client = new MongoClient(config.GetConnectionString("BookstoreDb"));
-            var database = client.GetDatabase("BookstoreDb");
-            _books = database.GetCollection<Book>("Books");
         }
 
-        public List<Book> Get()
+        public void GetData()
         {
-            return _books.Find(book => true).ToList();
+            throw new System.NotImplementedException();
         }
 
-        public Book Get(string id)
+        public void PersistData()
         {
-            return _books.Find<Book>(book => book.Id == id).FirstOrDefault();
-        }
-
-        public Book Create(Book book)
-        {
-            _books.InsertOne(book);
-            return book;
-        }
-
-        public void Update(string id, Book bookIn)
-        {
-            _books.ReplaceOne(book => book.Id == id, bookIn);
-        }
-
-        public void Remove(Book bookIn)
-        {
-            _books.DeleteOne(book => book.Id == bookIn.Id);
-        }
-
-        public void Remove(string id)
-        {
-            _books.DeleteOne(book => book.Id == id);
+            throw new System.NotImplementedException();
         }
     }
 }

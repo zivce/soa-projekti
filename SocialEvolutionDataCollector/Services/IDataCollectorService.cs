@@ -2,7 +2,7 @@ namespace SocialEvolutionDataCollector.Services
 {
     public interface IDataCollectorService
     {
-        void CollectData();
+        void CollectData(string url);
         void PersistData();
         void GetData();
     }
