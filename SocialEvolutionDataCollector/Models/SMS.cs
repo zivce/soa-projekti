@@ -4,12 +4,12 @@ using System.Text;
 
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using SocialEvolutionDataCollector.Models;
 
 namespace SocialEvolutionSensor.Models
 {
     public class SMS
     {
-
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]
         public string UserId { get; set; }

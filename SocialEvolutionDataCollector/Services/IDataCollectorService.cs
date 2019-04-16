@@ -1,9 +1,12 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 namespace SocialEvolutionDataCollector.Services
 {
-    public interface IDataCollectorService
+    public interface IDataCollectorService<T>
     {
-        void CollectData(string url);
+        Task<List<T>> CollectDataAsync();
         void PersistData();
-        void GetData();
+        Task<List<T>> GetDataAsync();
     }
 }
