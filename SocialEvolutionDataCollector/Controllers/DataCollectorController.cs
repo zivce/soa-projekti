@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SocialEvolutionDataCollector.Services;
+using SocialEvolutionSensor.Models;
 
 namespace SocialEvolutionDataCollector.Controllers
 {
@@ -11,20 +12,32 @@ namespace SocialEvolutionDataCollector.Controllers
     [ApiController]
     public class DataCollectorController : ControllerBase
     {
-        private string _endpointURL = "http://localhost:55834/api/Calls";
 
-        private IDataCollectorService _dataCollectorService;
+        private IDataCollectorService<Call> _callCollectorService;
+        private IDataCollectorService<SMS> _smsCollectorService;
 
-        public DataCollectorController(IDataCollectorService dataCollectorService){
-            _dataCollectorService = dataCollectorService;
+        public DataCollectorController(
+            IDataCollectorService<Call> callCollectorService,
+            IDataCollectorService<SMS> smsCollectorService){
+            _callCollectorService = callCollectorService;
+            _smsCollectorService = smsCollectorService;
         }
 
+        [Route("calls")]
         [HttpGet]
-        public ActionResult<string> Get()
+        public ActionResult<List<Call>> GetCalls()
         {
-            var collectedData = _dataCollectorService.CollectData(_endpointURL);
-            var res = _dataCollectorService.PersistData(collectedData);
-            return "Radiii";
+            var res = _callCollectorService.GetDataAsync();
+            return res.Result;
         }
+
+        [Route("messages")]
+        [HttpGet]
+        public ActionResult<List<SMS>> GetSmss()
+        {
+            var res = _smsCollectorService.GetDataAsync();
+            return res.Result;
+        }
+
     }
 }

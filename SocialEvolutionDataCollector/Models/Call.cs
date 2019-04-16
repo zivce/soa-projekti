@@ -4,6 +4,7 @@ using System.Text;
 
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
+using SocialEvolutionDataCollector.Models;
 
 namespace SocialEvolutionSensor.Models
 {
