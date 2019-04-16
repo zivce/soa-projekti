@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using SocialEvolutionDataCollector.Services.DataCollectorService;
 
 namespace SocialEvolutionDataCollector
 {
@@ -26,7 +27,7 @@ namespace SocialEvolutionDataCollector
         public void ConfigureServices(IServiceCollection services)
         {
             services.services.AddTransient<IDataCollectorService, DataCollectorService>();
-            
+            services.AddScoped<DataCollectorService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 

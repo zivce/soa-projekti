@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Net.;
 using System.Linq;
 using SocialEvolutionDataCollector.Models;
 using Microsoft.Extensions.Configuration;
@@ -9,7 +8,8 @@ namespace SocialEvolutionDataCollector.Services
 {
     public class DataCollectorService : IDataCollectorService
     {
-        private readonly HttpClient _client = new HttpClient();
+        var client = new MongoClient(config.GetConnectionString("dataCollectorDb"));
+        var database = client.GetDatabase("BookstoreDb");
 
         public void CollectDataAsync(string url)
         {
@@ -17,7 +17,8 @@ namespace SocialEvolutionDataCollector.Services
 
         public void GetData()
         {
-            throw new System.NotImplementedException();
+            var calls = database.GetCollection<Call>("Calls");
+            return calls;
         }
 
         public void PersistData()
