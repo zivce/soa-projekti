@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using SocialEvolutionSensor.Models;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -12,7 +13,8 @@ namespace SocialEvolutionDataCollector.Services
         private IConfiguration config;
         private string _endpointURL = "http://localhost:55834/api/SMSs";
 
-        public SMSCollectorService(IConfiguration configuration) {
+        public SMSCollectorService(IConfiguration configuration)
+        {
             config = configuration;
         }
 
@@ -45,6 +47,14 @@ namespace SocialEvolutionDataCollector.Services
             var client = new MongoDB.Driver.MongoClient(config.GetConnectionString("socialEvolutionConnectionString"));
             var database = client.GetDatabase("socialEvolutionDb");
             var messagesCollection = database.GetCollection<SMS>("Messages");
+            try
+            {
+                messagesCollection.InsertMany(messages);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
         }
     }
 }
