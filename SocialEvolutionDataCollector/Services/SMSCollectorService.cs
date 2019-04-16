@@ -10,15 +10,16 @@ namespace SocialEvolutionDataCollector.Services
 {
     public class SMSCollectorService : IDataCollectorService<SMS>
     {
-        private static string _endpointURL = "http://localhost:55834/api/SMSs";
+        private string _endpointURL = "http://localhost:55834/api/SMSs";
 
         public async Task<List<SMS>> CollectDataAsync()
         {
             var response = fetchData();
             var responseContent = await response;
             var responseContentString = await responseContent.ReadAsStringAsync();
-            List<SMS> _responseContent = JsonConvert.DeserializeObject<List<SMS>>(responseContentString);
-            return _responseContent;
+            List<SMS> _collectedMessages = JsonConvert.DeserializeObject<List<SMS>>(responseContentString);
+            await PersistData(_collectedMessages);
+            return messages;
         }
 
         private async Task<HttpContent> fetchData()
@@ -35,8 +36,11 @@ namespace SocialEvolutionDataCollector.Services
             return res;
         }
 
-        public void PersistData()
+        public void PersistData(List<SMS> messages)
         {
+            var client = new MongoClient(config.GetConnectionString("socialEvolutionConnectionString"));
+            var database = client.GetDatabase("socialEvolutionDb");
+            var messagesCollection = database.GetCollection("Messages");
            
         }
     }

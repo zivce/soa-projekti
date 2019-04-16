@@ -9,18 +9,16 @@ namespace SocialEvolutionDataCollector.Services
 {
     public class CallCollectorService : IDataCollectorService<Call>
     {
-
+        
         private static string _endpointURL = "http://localhost:55834/api/Calls";
 
-        async public Task<List<Call>> GetDataAsync()
+        async public Task<List<Call>> CollectDataAsync()
         {
-            var res = await this.CollectDataAsync();
-            return res;
-        }
-
-        public void PersistData()
-        {
-            throw new System.NotImplementedException();
+            var response = fetchData();
+            var responseContent = await response;
+            var responseContentString = await responseContent.ReadAsStringAsync();
+            List<Call> _responseContent = JsonConvert.DeserializeObject<List<Call>>(responseContentString);
+            return _responseContent;
         }
 
         private async Task<HttpContent> fetchData()
@@ -31,14 +29,16 @@ namespace SocialEvolutionDataCollector.Services
                 return response.Content;
             }
         }
-        
-        async public Task<List<Call>> CollectDataAsync()
+
+        async public Task<List<Call>> GetDataAsync()
         {
-            var response = fetchData();
-            var responseContent = await response;
-            var responseContentString = await responseContent.ReadAsStringAsync();
-            List<Call> _responseContent = JsonConvert.DeserializeObject<List<Call>>(responseContentString);
-            return _responseContent;
+            var res = await this.CollectDataAsync();
+            return res;
+        }
+
+        public void PersistData(List<Call> calls)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
