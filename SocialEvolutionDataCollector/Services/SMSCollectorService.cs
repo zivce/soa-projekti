@@ -1,8 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using SocialEvolutionSensor.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -10,7 +9,12 @@ namespace SocialEvolutionDataCollector.Services
 {
     public class SMSCollectorService : IDataCollectorService<SMS>
     {
+        private IConfiguration config;
         private string _endpointURL = "http://localhost:55834/api/SMSs";
+
+        public SMSCollectorService(IConfiguration configuration) {
+            config = configuration;
+        }
 
         public async Task<List<SMS>> CollectDataAsync()
         {
@@ -18,8 +22,8 @@ namespace SocialEvolutionDataCollector.Services
             var responseContent = await response;
             var responseContentString = await responseContent.ReadAsStringAsync();
             List<SMS> _collectedMessages = JsonConvert.DeserializeObject<List<SMS>>(responseContentString);
-            await PersistData(_collectedMessages);
-            return messages;
+            PersistData(_collectedMessages);
+            return _collectedMessages;
         }
 
         private async Task<HttpContent> fetchData()
@@ -38,10 +42,9 @@ namespace SocialEvolutionDataCollector.Services
 
         public void PersistData(List<SMS> messages)
         {
-            var client = new MongoClient(config.GetConnectionString("socialEvolutionConnectionString"));
+            var client = new MongoDB.Driver.MongoClient(config.GetConnectionString("socialEvolutionConnectionString"));
             var database = client.GetDatabase("socialEvolutionDb");
-            var messagesCollection = database.GetCollection("Messages");
-           
+            var messagesCollection = database.GetCollection<SMS>("Messages");
         }
     }
 }

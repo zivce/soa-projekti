@@ -1,14 +1,11 @@
 ﻿using CsvHelper;
 using SocialEvolutionSensor.Models;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SocialEvolutionSensorAPI.Services
 {
-    public class SMSsDataService: ISMSsDataService
+    public class SMSsDataService : ISMSsDataService
     {
         private const int step = 100;
         private List<SMS> SMSRecords;
@@ -31,7 +28,7 @@ namespace SocialEvolutionSensorAPI.Services
 
         public List<SMS> getLatest()
         {
-            var records =  SMSRecords.GetRange(latestIndex, step);
+            var records = SMSRecords.GetRange(latestIndex, step);
             latestIndex += step;
             return records;
         }
