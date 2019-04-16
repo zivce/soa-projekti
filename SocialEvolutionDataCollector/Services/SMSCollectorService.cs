@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using MongoDB.Driver;
 using Newtonsoft.Json;
 using SocialEvolutionSensor.Models;
 using System;
@@ -38,8 +39,10 @@ namespace SocialEvolutionDataCollector.Services
         }
         public async Task<List<SMS>> GetDataAsync()
         {
-            var res = await this.CollectDataAsync();
-            return res;
+            var client = new MongoDB.Driver.MongoClient(config.GetConnectionString("socialEvolutionConnectionString"));
+            var database = client.GetDatabase("socialEvolutionDb");
+            var smsCollection = database.GetCollection<SMS>("Messages");
+            return await smsCollection.Find(Builders<SMS>.Filter.Empty).ToListAsync();
         }
 
         public void PersistData(List<SMS> messages)

@@ -36,6 +36,5 @@ namespace SocialEvolutionDataCollector.Controllers
             var res = _smsCollectorService.GetDataAsync();
             return res.Result;
         }
-
     }
 }

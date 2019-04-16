@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Configuration;
+using MongoDB.Driver;
 using Newtonsoft.Json;
 using SocialEvolutionSensor.Models;
 using System;
@@ -39,8 +40,10 @@ namespace SocialEvolutionDataCollector.Services
 
         async public Task<List<Call>> GetDataAsync()
         {
-            var res = await this.CollectDataAsync();
-            return res;
+            var client = new MongoDB.Driver.MongoClient(config.GetConnectionString("socialEvolutionConnectionString"));
+            var database = client.GetDatabase("socialEvolutionDb");
+            var callsCollection = database.GetCollection<Call>("Calls");
+            return await callsCollection.Find(Builders<Call>.Filter.Empty).ToListAsync();
         }
 
         public void PersistData(List<Call> calls)
