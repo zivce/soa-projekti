@@ -11,12 +11,13 @@ namespace SocialEvolutionDataCollector.Services
 {
     public class SMSCollectorService : IDataCollectorService<SMS>
     {
-        private IConfiguration config;
-        private string _endpointURL = "http://localhost:55834/api/SMSs";
+        private IConfiguration _config;
+        private string _endpointURL;
 
         public SMSCollectorService(IConfiguration configuration)
         {
-            config = configuration;
+            _config = configuration;
+            _endpointURL = _config.GetSection("GlobalConsts").GetSection("apiSMSs").Value;
         }
 
         public async Task<List<SMS>> CollectDataAsync()
@@ -39,7 +40,7 @@ namespace SocialEvolutionDataCollector.Services
         }
         public async Task<List<SMS>> GetDataAsync()
         {
-            var client = new MongoDB.Driver.MongoClient(config.GetConnectionString("socialEvolutionConnectionString"));
+            var client = new MongoDB.Driver.MongoClient(_config.GetConnectionString("socialEvolutionConnectionString"));
             var database = client.GetDatabase("socialEvolutionDb");
             var smsCollection = database.GetCollection<SMS>("Messages");
             return await smsCollection.Find(Builders<SMS>.Filter.Empty).ToListAsync();
@@ -47,7 +48,7 @@ namespace SocialEvolutionDataCollector.Services
 
         public void PersistData(List<SMS> messages)
         {
-            var client = new MongoDB.Driver.MongoClient(config.GetConnectionString("socialEvolutionConnectionString"));
+            var client = new MongoDB.Driver.MongoClient(_config.GetConnectionString("socialEvolutionConnectionString"));
             var database = client.GetDatabase("socialEvolutionDb");
             var messagesCollection = database.GetCollection<SMS>("Messages");
             try

@@ -11,12 +11,13 @@ namespace SocialEvolutionDataCollector.Services
 {
     public class CallCollectorService : IDataCollectorService<Call>
     {
-        private IConfiguration config;
-        private static string _endpointURL = "http://localhost:55834/api/Calls";
+        private IConfiguration _config;
+        private static string _endpointURL;
 
         public CallCollectorService(IConfiguration configuration)
         {
-            config = configuration;
+            _config = configuration;
+            _endpointURL = _config.GetSection("GlobalConsts").GetSection("apiCalls").Value;
         }
 
         async public Task<List<Call>> CollectDataAsync()
@@ -40,7 +41,7 @@ namespace SocialEvolutionDataCollector.Services
 
         async public Task<List<Call>> GetDataAsync()
         {
-            var client = new MongoDB.Driver.MongoClient(config.GetConnectionString("socialEvolutionConnectionString"));
+            var client = new MongoDB.Driver.MongoClient(_config.GetConnectionString("socialEvolutionConnectionString"));
             var database = client.GetDatabase("socialEvolutionDb");
             var callsCollection = database.GetCollection<Call>("Calls");
             return await callsCollection.Find(Builders<Call>.Filter.Empty).ToListAsync();
@@ -48,7 +49,7 @@ namespace SocialEvolutionDataCollector.Services
 
         public void PersistData(List<Call> calls)
         {
-            var client = new MongoDB.Driver.MongoClient(config.GetConnectionString("socialEvolutionConnectionString"));
+            var client = new MongoDB.Driver.MongoClient(_config.GetConnectionString("socialEvolutionConnectionString"));
             var database = client.GetDatabase("socialEvolutionDb");
             var callsCollection = database.GetCollection<Call>("Calls");
             try
