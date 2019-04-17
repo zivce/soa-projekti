@@ -4,7 +4,7 @@ using System;
 
 namespace SocialEvolutionSensor.Models
 {
-    public class SMS
+    public class Message
     {
         [BsonId]
         [BsonRepresentation(BsonType.ObjectId)]

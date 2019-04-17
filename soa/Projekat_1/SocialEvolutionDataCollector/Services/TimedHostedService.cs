@@ -13,17 +13,17 @@ internal class TimedHostedService : IHostedService, IDisposable
     private readonly ILogger _logger;
     private Timer _timer;
     private IDataCollectorService<Call> _callCollectorService;
-    private IDataCollectorService<SMS> _smsCollectorService;
+    private IDataCollectorService<Message> _messageCollectorService;
 
     public TimedHostedService(
         IConfiguration configuration,
         IDataCollectorService<Call> callCollectorService,
-        IDataCollectorService<SMS> smsCollectorService,
+        IDataCollectorService<Message> messageCollectorService,
         ILogger<TimedHostedService> logger)
     {
         _config = configuration;
         _callCollectorService = callCollectorService;
-        _smsCollectorService = smsCollectorService;
+        _messageCollectorService = messageCollectorService;
         _logger = logger;
     }
 
@@ -41,7 +41,7 @@ internal class TimedHostedService : IHostedService, IDisposable
     {
         _logger.LogInformation("Timed Background Service is working.");
         _callCollectorService.CollectDataAsync();
-        _smsCollectorService.CollectDataAsync();
+        _messageCollectorService.CollectDataAsync();
 
     }
 

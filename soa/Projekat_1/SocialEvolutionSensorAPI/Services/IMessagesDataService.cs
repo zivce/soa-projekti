@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 namespace SocialEvolutionSensorAPI.Services
 {
-    public interface ISMSsDataService
+    public interface IMessagesDataService
     {
-        List<SMS> getLatest();
+        List<Message> getLatest();
     }
 }

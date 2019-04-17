@@ -11,14 +11,14 @@ namespace SocialEvolutionDataCollector.Controllers
     {
 
         private IDataCollectorService<Call> _callCollectorService;
-        private IDataCollectorService<SMS> _smsCollectorService;
+        private IDataCollectorService<Message> _messageCollectorService;
 
         public DataCollectorController(
             IDataCollectorService<Call> callCollectorService,
-            IDataCollectorService<SMS> smsCollectorService)
+            IDataCollectorService<Message> messageCollectorService)
         {
             _callCollectorService = callCollectorService;
-            _smsCollectorService = smsCollectorService;
+            _messageCollectorService = messageCollectorService;
         }
 
         [Route("calls")]
@@ -31,9 +31,9 @@ namespace SocialEvolutionDataCollector.Controllers
 
         [Route("messages")]
         [HttpGet]
-        public ActionResult<List<SMS>> GetSmss()
+        public ActionResult<List<Message>> GetMessages()
         {
-            var res = _smsCollectorService.GetDataAsync();
+            var res = _messageCollectorService.GetDataAsync();
             return res.Result;
         }
     }

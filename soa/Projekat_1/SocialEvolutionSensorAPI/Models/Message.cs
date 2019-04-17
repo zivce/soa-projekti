@@ -2,7 +2,7 @@
 
 namespace SocialEvolutionSensor.Models
 {
-    public class SMS
+    public class Message
     {
         public string UserId { get; set; }
         public DateTime TimeStamp { get; set; }

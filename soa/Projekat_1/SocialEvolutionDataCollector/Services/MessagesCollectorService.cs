@@ -9,23 +9,23 @@ using System.Threading.Tasks;
 
 namespace SocialEvolutionDataCollector.Services
 {
-    public class SMSCollectorService : IDataCollectorService<SMS>
+    public class MessageCollectorService : IDataCollectorService<Message>
     {
         private IConfiguration _config;
         private string _endpointURL;
 
-        public SMSCollectorService(IConfiguration configuration)
+        public MessageCollectorService(IConfiguration configuration)
         {
             _config = configuration;
-            _endpointURL = _config.GetSection("GlobalConsts").GetSection("apiSMSs").Value;
+            _endpointURL = _config.GetSection("GlobalConsts").GetSection("apiMessages").Value;
         }
 
-        public async Task<List<SMS>> CollectDataAsync()
+        public async Task<List<Message>> CollectDataAsync()
         {
             var response = fetchData();
             var responseContent = await response;
             var responseContentString = await responseContent.ReadAsStringAsync();
-            List<SMS> _collectedMessages = JsonConvert.DeserializeObject<List<SMS>>(responseContentString);
+            List<Message> _collectedMessages = JsonConvert.DeserializeObject<List<Message>>(responseContentString);
             PersistData(_collectedMessages);
             return _collectedMessages;
         }
@@ -38,19 +38,19 @@ namespace SocialEvolutionDataCollector.Services
                 return response.Content;
             }
         }
-        public async Task<List<SMS>> GetDataAsync()
+        public async Task<List<Message>> GetDataAsync()
         {
             var client = new MongoDB.Driver.MongoClient(_config.GetConnectionString("socialEvolutionConnectionString"));
             var database = client.GetDatabase("socialEvolutionDb");
-            var smsCollection = database.GetCollection<SMS>("Messages");
-            return await smsCollection.Find(Builders<SMS>.Filter.Empty).ToListAsync();
+            var messageCollection = database.GetCollection<Message>("Messages");
+            return await messageCollection.Find(Builders<Message>.Filter.Empty).ToListAsync();
         }
 
-        public void PersistData(List<SMS> messages)
+        public void PersistData(List<Message> messages)
         {
             var client = new MongoDB.Driver.MongoClient(_config.GetConnectionString("socialEvolutionConnectionString"));
             var database = client.GetDatabase("socialEvolutionDb");
-            var messagesCollection = database.GetCollection<SMS>("Messages");
+            var messagesCollection = database.GetCollection<Message>("Messages");
             try
             {
                 messagesCollection.InsertMany(messages);
