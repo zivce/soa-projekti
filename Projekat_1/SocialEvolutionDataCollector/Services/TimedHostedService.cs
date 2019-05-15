@@ -42,7 +42,6 @@ internal class TimedHostedService : IHostedService, IDisposable
         _logger.LogInformation("Timed Background Service is working.");
         _callCollectorService.CollectDataAsync();
         _messageCollectorService.CollectDataAsync();
-
     }
 
     public Task StopAsync(CancellationToken cancellationToken)
