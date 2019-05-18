@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CallStatistics.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api")]
     [ApiController]
     public class ValuesController : ControllerBase
     {
@@ -14,7 +14,7 @@ namespace CallStatistics.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            return new string[] { "value1", "value2" };
+            return new string[] { "Service is running..." };
         }
 
         // GET api/values/5

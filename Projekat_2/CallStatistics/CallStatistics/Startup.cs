@@ -1,4 +1,5 @@
-﻿using CallStatisticsService.Services;
+﻿using CallStatisticsService.CollectorClient;
+using CallStatisticsService.Services;
 using CallStatisticsService.Services.Concrete;
 using CallStatisticsService.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -6,7 +7,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using SocialEvolutionSensor.Models;
 
 namespace CallStatistics
 {
@@ -25,7 +25,10 @@ namespace CallStatistics
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddScoped<ICallService<Call>, CallService>();
+            services.AddTransient<ICallStatsService, CallStatsService>();
+            services.AddSingleton<ICollectorClient, CallCollectorClient>();
+            services.AddHostedService<TimedHostedService>();
+
             //services.AddScoped<ICallService<CallEvent>, CallEventsService>();
 
         }

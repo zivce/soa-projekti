@@ -2,7 +2,7 @@
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 
-namespace SocialEvolutionSensor.Models
+namespace CallStatisticsService.Models
 {
     public class Call
     {
