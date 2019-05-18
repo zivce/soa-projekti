@@ -18,11 +18,16 @@ namespace CallStatisticsService.Services.Concrete
 
         private IConfiguration _config;
         private static string _endpointURL;
+        private readonly IMongoCollection<UserCallStats> _callStatsCollection;
 
         public CallStatsService(IConfiguration configuration)
         {
             _config = configuration;
             _endpointURL = _config.GetSection("GlobalConsts").GetSection("apiLatestCalls").Value;
+            var client = new MongoClient(_config.GetConnectionString("socialEvolutionConnectionString"));
+            var database = client.GetDatabase("socialEvolutionDb");
+            var callStatsCollection = database.GetCollection<UserCallStats>(callStatsCollectionName);
+            _callStatsCollection = callStatsCollection;
         }
 
 
@@ -37,10 +42,8 @@ namespace CallStatisticsService.Services.Concrete
 
         async public Task<UserCallStats> GetStats(string userId)
         {
-            var client = new MongoClient(_config.GetConnectionString("socialEvolutionConnectionString"));
-            var database = client.GetDatabase("socialEvolutionDb");
-            var callsCollection = database.GetCollection<UserCallStats>(callStatsCollectionName);
-            var callStats = await callsCollection.Find(x => x.UserId == userId).FirstOrDefaultAsync();
+           
+            var callStats = await _callStatsCollection.Find(x => x.UserId == userId).FirstOrDefaultAsync();
             return callStats;
         }
 
@@ -54,18 +57,35 @@ namespace CallStatisticsService.Services.Concrete
             UpdateAllStats(_collectedCallStats);
         }
 
+        // By receiving mapped user calls from data service endpoint this will refresh 
+        // the collection of user call stats or insert new call stats
         public void UpdateAllStats(List<UserCallStats> stats)
         {
-            var client = new MongoClient(_config.GetConnectionString("socialEvolutionConnectionString"));
-            var database = client.GetDatabase("socialEvolutionDb");
-            var callsCollection = database.GetCollection<Call>(callStatsCollectionName);
-            
-            //Get related user stats 
+            stats.ForEach(async(x) =>
+            {
+                var callStats = await GetStats(x.UserId);
+                var callStatsExist = callStats != null;
+                if(callStatsExist)
+                {
+                    callStats.TotalCallDuration += x.TotalCallDuration;
+                    UpdateRecord(callStats);
+                }
+                else
+                {
+                    InsertRecord(x);
+                }
 
-            // if record already exists update total duration and return it
-           
+            });
+        }
 
-            //if doesn't insert it
+        private void UpdateRecord(UserCallStats stats)
+        {
+            _callStatsCollection.ReplaceOne(userCallStats => userCallStats.UserId == stats.UserId, stats);
+        }
+
+        private void InsertRecord(UserCallStats stats)
+        {
+            _callStatsCollection.InsertOne(stats);
         }
 
         private List<UserCallStats> ConvertCallsToStats(List<Call> calls)
