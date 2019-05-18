@@ -11,6 +11,11 @@ namespace SocialEvolutionDataCollector.Services
 {
     public class CallCollectorService : IDataCollectorService<Call>
     {
+
+        private const int step = 100;
+        private int latestIndex = 0;
+        private const string callsCollectionName = "Calls";
+
         private IConfiguration _config;
         private static string _endpointURL;
 
@@ -43,15 +48,29 @@ namespace SocialEvolutionDataCollector.Services
         {
             var client = new MongoDB.Driver.MongoClient(_config.GetConnectionString("socialEvolutionConnectionString"));
             var database = client.GetDatabase("socialEvolutionDb");
-            var callsCollection = database.GetCollection<Call>("Calls");
+            var callsCollection = database.GetCollection<Call>(callsCollectionName);
             return await callsCollection.Find(Builders<Call>.Filter.Empty).ToListAsync();
+        }
+
+        async public Task<List<Call>> GetLatestDataAsync()
+        {
+            var client = new MongoDB.Driver.MongoClient(_config.GetConnectionString("socialEvolutionConnectionString"));
+            var database = client.GetDatabase("socialEvolutionDb");
+            var callsCollection = database.GetCollection<Call>(callsCollectionName);
+            var callListChunk = await callsCollection
+                                .Find(x => true)
+                                .Skip(latestIndex)
+                                .Limit(step)
+                                .ToListAsync();
+            latestIndex += step;
+            return callListChunk;
         }
 
         public void PersistData(List<Call> calls)
         {
             var client = new MongoDB.Driver.MongoClient(_config.GetConnectionString("socialEvolutionConnectionString"));
             var database = client.GetDatabase("socialEvolutionDb");
-            var callsCollection = database.GetCollection<Call>("Calls");
+            var callsCollection = database.GetCollection<Call>(callsCollectionName);
             try
             {
                 callsCollection.InsertMany(calls);

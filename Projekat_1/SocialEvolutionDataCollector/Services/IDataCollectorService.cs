@@ -8,5 +8,6 @@ namespace SocialEvolutionDataCollector.Services
         Task<List<T>> CollectDataAsync();
         void PersistData(List<T> data);
         Task<List<T>> GetDataAsync();
+        Task<List<T>> GetLatestDataAsync();
     }
 }

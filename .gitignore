@@ -5,8 +5,11 @@ project.lock.json
 *.pyc
 nupkg/
 
-# Visual Studio Code
+# Visual Studio
 .vscode
+.vs/
+.vs
+
 
 # Rider
 .idea
@@ -33,5 +36,5 @@ msbuild.log
 msbuild.err
 msbuild.wrn
 
-.vs/
+# Node
 node_modules/

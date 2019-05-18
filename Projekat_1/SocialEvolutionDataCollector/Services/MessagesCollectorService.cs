@@ -13,6 +13,9 @@ namespace SocialEvolutionDataCollector.Services
     {
         private IConfiguration _config;
         private string _endpointURL;
+        private const string messagesCollectionName = "Messages";
+        private const int step = 100;
+        private int latestIndex = 0;
 
         public MessageCollectorService(IConfiguration configuration)
         {
@@ -42,15 +45,30 @@ namespace SocialEvolutionDataCollector.Services
         {
             var client = new MongoDB.Driver.MongoClient(_config.GetConnectionString("socialEvolutionConnectionString"));
             var database = client.GetDatabase("socialEvolutionDb");
-            var messageCollection = database.GetCollection<Message>("Messages");
+            var messageCollection = database.GetCollection<Message>(messagesCollectionName);
             return await messageCollection.Find(Builders<Message>.Filter.Empty).ToListAsync();
+        }
+
+
+        async public Task<List<Message>> GetLatestDataAsync()
+        {
+            var client = new MongoDB.Driver.MongoClient(_config.GetConnectionString("socialEvolutionConnectionString"));
+            var database = client.GetDatabase("socialEvolutionDb");
+            var messageCollection = database.GetCollection<Message>(messagesCollectionName);
+            var messagesListChunk = await messageCollection
+                                .Find(x => true)
+                                .Skip(latestIndex)
+                                .Limit(step)
+                                .ToListAsync();
+            latestIndex += step;
+            return messagesListChunk;
         }
 
         public void PersistData(List<Message> messages)
         {
             var client = new MongoDB.Driver.MongoClient(_config.GetConnectionString("socialEvolutionConnectionString"));
             var database = client.GetDatabase("socialEvolutionDb");
-            var messagesCollection = database.GetCollection<Message>("Messages");
+            var messagesCollection = database.GetCollection<Message>(messagesCollectionName);
             try
             {
                 messagesCollection.InsertMany(messages);

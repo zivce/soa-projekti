@@ -21,6 +21,24 @@ namespace SocialEvolutionDataCollector.Controllers
             _messageCollectorService = messageCollectorService;
         }
 
+        [Route("latest-calls")]
+        [HttpGet]
+        public ActionResult<List<Call>> GetLatestCalls()
+        {
+            var res = _callCollectorService.GetLatestDataAsync();
+            return res.Result;
+        }
+
+
+        [Route("latest-messages")]
+        [HttpGet]
+        public ActionResult<List<Message>> GetLatestMessages()
+        {
+            var res = _messageCollectorService.GetLatestDataAsync();
+            return res.Result;
+        }
+
+
         [Route("calls")]
         [HttpGet]
         public ActionResult<List<Call>> GetCalls()
