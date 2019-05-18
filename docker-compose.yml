@@ -1,0 +1,47 @@
+version: "1"
+services:
+    sensor:
+        build: "./sensor"
+        ports:
+            - "3001:3001"
+
+    collector:
+        build: "./collector"
+        ports:
+            - "3002:3002"
+        environment:
+            - DATA_COLLECTOR_DB_URI="mongodb+srv://collector_node:collector_node@socialevolutioncluster-kde4s.mongodb.net/test?retryWrites=true"
+
+    message_statistics:
+        build: "./message_statistics"
+        ports:
+            - "3003:3003"
+
+    call_statistics:
+        build: "./call_statistics"
+        ports:
+            - "3004:3004"
+
+    statistics_db:
+        image: mongo,
+        ports:
+            - "27017:27017"
+
+    web_gui:
+        build: "./web_gui"
+        ports:
+            - "3000:3000"
+
+    nginx:
+        image: nginx:latest
+        ports:
+            - "8080:8080"
+        volumes:
+            - ./web_gui:/srv/www/static
+            - ./default.conf:/etc/nginx/conf.d/default.conf
+        depends_on:
+            - sensor
+            - collector
+            - statistics_db
+            - message_statistics
+            - call_statistics

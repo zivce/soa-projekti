@@ -18,7 +18,7 @@ seneca.add("role:math,cmd:sum", (msg, reply) => {
 
 seneca.act({ role: "math", cmd: "sum", left: 1, right: 2 }, actOnMathSum);
 
-server.get("/", async (req, res, next) => {
+server.get("/", (req, res, next) => {
   const debugDescription = `This is the endpoint for '${serverConfig.name}' service.`;
   res.json({ debugDescription });
 });
