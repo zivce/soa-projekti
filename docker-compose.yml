@@ -10,13 +10,13 @@ services:
         container_name: "sensor"
         build: "./SocialEvolutionSensorAPI"
         ports:
-            - "3001:3001"
+            - "55834:55834"
 
     collector:
         container_name: "collector"
         build: "./SocialEvolutionDataCollector"
         ports:
-            - "3002:3002"
+            - "55835:55835"
         environment:
             - DATA_COLLECTOR_DB_URI="mongodb+srv://collector_node:collector_node@socialevolutioncluster-kde4s.mongodb.net/test?retryWrites=true"
 

@@ -29,7 +29,7 @@ namespace SocialEvolutionDataCollector
         {
             services.AddSingleton<IDataCollectorService<Call>, CallCollectorService>();
             services.AddSingleton<IDataCollectorService<Message>, MessageCollectorService>();
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddMvc();
             services.AddHostedService<TimedHostedService>();
         }
 
