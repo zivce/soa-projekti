@@ -1,7 +1,21 @@
 FROM mcr.microsoft.com/dotnet/core/runtime:2.2
 
-COPY ./bin/Release/netcoreapp2.2/publish/ app/
+FROM microsoft/dotnet:sdk AS build-env
+WORKDIR /app
 
-ENTRYPOINT ["dotnet", "app/SocialEvolutionDataCollector.dll"]
+# Copy csproj and restore as distinct layers
+COPY *.csproj ./
+RUN dotnet restore
+
+# Copy everything else and build
+COPY . ./
+RUN dotnet publish -c Release -o out
+
+# Build runtime image
+FROM microsoft/dotnet:aspnetcore-runtime
+WORKDIR /app
+COPY --from=build-env /app/out .
+
+ENTRYPOINT ["dotnet", "SocialEvolutionDataCollector.dll"]
 
 EXPOSE 55835

@@ -16,6 +16,6 @@ FROM microsoft/dotnet:aspnetcore-runtime
 WORKDIR /app
 COPY --from=build-env /app/out .
 
-ENTRYPOINT ["dotnet", "SocialEvolutionSensorAPI.dll"]
+ENTRYPOINT ["dotnet", "CallStatistics.dll"]
 
-EXPOSE 55834
+EXPOSE 3004
