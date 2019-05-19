@@ -8,7 +8,8 @@ namespace CallStatisticsService.Services.Interfaces
 {
     public interface ICallEventsService
     {
-        void InsertEvent(CallEvent data);
-
+        void UpdateStats();
+        Task<List<CallEvent>> GetEventsAsync();
+        Task<CallEvent> GetLatestEventAsync();
     }
 }
