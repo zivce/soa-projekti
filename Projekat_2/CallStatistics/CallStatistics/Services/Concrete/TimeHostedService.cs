@@ -11,11 +11,11 @@ internal class TimedHostedService : IHostedService, IDisposable
     private IConfiguration _config;
     private readonly ILogger _logger;
     private Timer _timer;
-    private ICallStatsService _callStatsService;
+    private ICallEventsService _callStatsService;
 
     public TimedHostedService(
         IConfiguration configuration,
-        ICallStatsService callStatsService,
+        ICallEventsService callStatsService,
         ILogger<TimedHostedService> logger)
     {
         _config = configuration;

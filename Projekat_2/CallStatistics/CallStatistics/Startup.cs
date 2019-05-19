@@ -1,4 +1,5 @@
-﻿using CallStatisticsService.CollectorClient;
+﻿using CallStatisticsService.Analytics;
+using CallStatisticsService.CollectorClient;
 using CallStatisticsService.Services;
 using CallStatisticsService.Services.Concrete;
 using CallStatisticsService.Services.Interfaces;
@@ -25,11 +26,11 @@ namespace CallStatistics
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            services.AddTransient<ICallStatsService, CallStatsService>();
+            services.AddTransient<ICallEventsService, CallProcessingService>();
             services.AddSingleton<ICollectorClient, CallCollectorClient>();
-            services.AddHostedService<TimedHostedService>();
-
-            //services.AddScoped<ICallService<CallEvent>, CallEventsService>();
+            services.AddSingleton<LinearRegressionService>();
+            // TODO Uncomment in production...
+            //services.AddHostedService<TimedHostedService>();
 
         }
 
@@ -45,7 +46,7 @@ namespace CallStatistics
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
             app.UseMvc();
         }
     }
