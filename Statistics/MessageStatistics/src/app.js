@@ -12,12 +12,18 @@ const seneca = getSenecaWithPlugins(senecaPlugins);
 server.use(bodyParser.json());
 
 seneca.listen();
+
 // seneca.act({ ...calcMessageStatsPattern, messages: ["prva", "druga"] }, console.log);
 
 server.get("/", (req, res, next) => {
   const debugDescription = `This is the endpoint for '${serverConfig.name}' service.`;
   res.json({ debugDescription });
 });
+
+
+
+
+
 
 function getSenecaWithPlugins(plugins, senecaInstance = senecaConstructor()) {
   plugins.forEach(plugin => {
