@@ -1,21 +1,20 @@
-FROM mcr.microsoft.com/dotnet/core/runtime:2.2
-
-FROM microsoft/dotnet:sdk AS build-env
+FROM microsoft/dotnet:2.2-aspnetcore-runtime AS base
 WORKDIR /app
-
-# Copy csproj and restore as distinct layers
-COPY *.csproj ./
-RUN dotnet restore
-
-# Copy everything else and build
-COPY . ./
-RUN dotnet publish -c Release -o out
-
-# Build runtime image
-FROM microsoft/dotnet:aspnetcore-runtime
-WORKDIR /app
-COPY --from=build-env /app/out .
-
-ENTRYPOINT ["dotnet", "SocialEvolutionDataCollector.dll"]
-
 EXPOSE 55835
+ENV ASPNETCORE_URLS http://+:55835
+
+FROM microsoft/dotnet:2.2-sdk AS build
+WORKDIR /src
+COPY ["SocialEvolutionDataCollector.csproj", "./"]
+RUN dotnet restore
+COPY . .
+RUN dotnet build "SocialEvolutionDataCollector.csproj" -c Release -o /app
+
+FROM build AS publish
+RUN dotnet publish "SocialEvolutionDataCollector.csproj" -c Release -o /app
+
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app .
+ENTRYPOINT ["dotnet", "SocialEvolutionDataCollector.dll"]
