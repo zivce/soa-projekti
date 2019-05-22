@@ -8,7 +8,7 @@ const calcMessageStatsPattern = {
 
 function messageStatsPlugin(options) {
   this.add(calcMessageStatsPattern, (msg, res) => {
-    res(null, { result: `Porucice xexe: ${msg.messages}` });
+    res({callStats: "Bussiness Logic goes here"})
   });  
 }
 
