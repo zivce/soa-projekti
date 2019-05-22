@@ -1,7 +1,20 @@
-FROM mcr.microsoft.com/dotnet/core/runtime:2.2
+FROM microsoft/dotnet:2.2-aspnetcore-runtime AS base
+WORKDIR /app
+COPY /SensorData ./SensorData
+EXPOSE 55834
+ENV ASPNETCORE_URLS http://+:55834
 
-COPY ./bin/Release/netcoreapp2.2/publish/ app/
+FROM microsoft/dotnet:2.2-sdk AS build
+WORKDIR /src
+COPY ["SocialEvolutionSensorAPI.csproj", "./"]
+RUN dotnet restore "./SocialEvolutionSensorAPI.csproj"
+COPY . .
+RUN dotnet build "SocialEvolutionSensorAPI.csproj" -c Release -o /app
 
-ENTRYPOINT ["dotnet", "app/SocialEvolutionSensorAPI.dll"]
+FROM build AS publish
+RUN dotnet publish "SocialEvolutionSensorAPI.csproj" -c Release -o /app
 
-EXPOSE 55835
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app .
+ENTRYPOINT ["dotnet", "SocialEvolutionSensorAPI.dll"]
