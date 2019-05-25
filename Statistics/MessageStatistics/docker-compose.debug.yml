@@ -1,0 +1,12 @@
+version: '2.1'
+
+services:
+  messagestatistics:
+    image: messagestatistics
+    build: .
+    environment:
+      NODE_ENV: development
+    ports:
+      - 55837:55837
+      - 9229:9229
+    command: node --inspect=0.0.0.0:9229 ./index.js

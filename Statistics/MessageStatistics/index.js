@@ -1,9 +1,6 @@
-// @ts-check
+var spawn = require('child_process').spawn
 
-const server = require("./src/app");
-const serverConfig = require("./src/config/server.config");
-
-server.listen(serverConfig.port, () => {
-  const msg = `Server '${serverConfig.name}' started successfully...`;
-  console.log(msg);
-});
+const services = ['message-processing.service.js', 'restful-message-events.service.js']
+services.forEach((service) => {
+  spawn('node', ['./src/services/' + service, '--seneca.log.all']);
+})

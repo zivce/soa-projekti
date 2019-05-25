@@ -13,7 +13,6 @@ RUN dotnet build "SocialEvolutionDataCollector.csproj" -c Release -o /app
 FROM build AS publish
 RUN dotnet publish "SocialEvolutionDataCollector.csproj" -c Release -o /app
 
-
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
