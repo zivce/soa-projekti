@@ -1,0 +1,10 @@
+version: '2.1'
+
+services:
+  messagestatistics:
+    image: messagestatistics
+    build: .
+    environment:
+      NODE_ENV: production
+    ports:
+      - 55837:55837
