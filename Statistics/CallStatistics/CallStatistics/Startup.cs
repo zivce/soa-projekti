@@ -29,8 +29,7 @@ namespace CallStatistics
             services.AddTransient<ICallEventsService, CallProcessingService>();
             services.AddSingleton<ICollectorClient, CallCollectorClient>();
             services.AddSingleton<LinearRegressionService>();
-            // TODO Uncomment in production...
-            //services.AddHostedService<TimedHostedService>();
+            services.AddHostedService<TimedHostedService>();
 
         }
 
