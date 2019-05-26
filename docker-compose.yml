@@ -1,18 +1,18 @@
 version: "3"
 services:
-    web_gui:
-        container_name: "web_gui"
-        build: "./WebGUI"
-        ports:
-            - "3000:3000"
+    # web_gui:
+    #     container_name: "web_gui"
+    #     build: "./WebGUI"
+    #     ports:
+    #         - "3000:3000"
 
-    sensor:
+    aspnetcore_sensor:
         container_name: "sensor"
         build: "./SocialEvolutionSensorAPI"
         ports:
             - "55834:55834"
 
-    collector:
+    aspnetcore_collector:
         container_name: "collector"
         build: "./SocialEvolutionDataCollector"
         ports:
@@ -20,40 +20,14 @@ services:
         environment:
             - DATA_COLLECTOR_DB_URI="mongodb+srv://collector_node:collector_node@socialevolutioncluster-kde4s.mongodb.net/test?retryWrites=true"
 
-    message_statistics:
+    aspnetcore_call_statistics:
+        container_name: "call_statistics"
+        build: "./Statistics/CallStatistics/CallStatistics/"
+        ports:
+            - "55836:55836"
+
+    nodejs_message_statistics:
         container_name: "message_statistics"
         build: "./Statistics/MessageStatistics"
         ports:
-            - "3003:3003"
-        links:
-            - statistics_db
-
-    call_statistics:
-        container_name: "call_statistics"
-        build: "./Statistics/CallStatistics"
-        ports:
-            - "3004:3004"
-        links:
-            - statistics_db
-
-    statistics_db:
-        container_name: "statistics_db"
-        image: mongo,
-        ports:
-            - "27017:27017"
-
-    nginx:
-        container_name: "nginx"
-        image: nginx:latest
-        ports:
-            - "8080:8080"
-        volumes:
-            - ./WebGUI:/srv/www/static
-            - ./default.conf:/etc/nginx/conf.d/default.conf
-        depends_on:
-            - web_gui
-            - sensor
-            - collector
-            - statistics_db
-            - message_statistics
-            - call_statistics
+            - "55837:55837"
