@@ -1,0 +1,21 @@
+{
+    "name": "devicehive-plugin-node-template",
+    "version": "1.1.0",
+    "description": "",
+    "main": "./plugin/index.js",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/devicehive/devicehive-plugin-node-template.git"
+    },
+    "dependencies": {
+        "devicehive-plugin-core": "1.1.4",
+        "devicehive-proxy-message": "git+https://github.com/devicehive/devicehive-proxy-message.git",
+        "node-fetch": "2.6.0"
+    },
+    "devDependencies": {},
+    "scripts": {
+        "start": "node ./plugin/index.js && node ./plugin/index-other.js"
+    },
+    "author": "Ihor T.",
+    "license": "Apache-2.0"
+}
