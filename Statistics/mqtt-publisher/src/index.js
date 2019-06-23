@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const { initThingsBoardClients, publishToMQTT } = require("./publisher");
 
 const thingsboardHost = "172.17.0.1";
-const accessTokens = ["xXnAg7WshPAF2ET4zVRF"];
+const accessTokens = ["KScw8NnHCX5z4jDhzTPU"];
 const expressListenPort = 34567;
 
 app.use(bodyParser.json());
