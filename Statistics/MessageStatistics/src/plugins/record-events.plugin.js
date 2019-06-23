@@ -1,16 +1,13 @@
 // @ts-check
-
 // TODO fix import not working for some reason
 // const { MONGO_DB_CLOUD_URI } = require('../config/db.config');
 const mongoose = require("mongoose");
-const fetch = require("../../node_modules/node-fetch");
-
-const MessageEventModel = require("../models/message-event.model");
-
-const EventPublisherEndpoint = "http://172.17.0.1:34567/publish";
-
+const fetch = require("node-fetch");
 const MONGO_DB_CLOUD_URI =
   "mongodb+srv://collector_node:collector_node@socialevolutioncluster-kde4s.mongodb.net/socialEvolutionDb?retryWrites=true";
+
+const MessageEventModel = require("../models/message-event.model");
+const EventPublisherEndpoint = "http://172.17.0.1:34567/publish";
 
 const plugin = "message-collect";
 const recordPattern = {
@@ -29,7 +26,6 @@ function recordEvents(options) {
   seneca.add(postEventPattern, (msg, res) => {
     const CurrentPrediction = msg.currentprediction;
     const data = { CurrentPrediction, LastUpdatedAt: new Date() };
-    console.log("Pre baze, message stats");
     const newEvent = new MessageEventModel(data);
     newEvent.save((err, event) => {
       console.log(event);
@@ -38,7 +34,9 @@ function recordEvents(options) {
         res(err, null);
         return;
       }
-      // checkDataAndAlert(data);
+      // fetch post to the mqttpublisher
+      // fetch(data)
+      checkDataAndAlert({msg: "ipak radi"});
       res(null, event._id);
     });
   });

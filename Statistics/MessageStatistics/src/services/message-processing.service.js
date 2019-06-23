@@ -5,7 +5,7 @@ const { collectMessagesPattern, collectMessagesPlugin } = require('../plugins/me
 const { processMessagesPattern, processMessagesPlugin } = require('../plugins/process-messages.plugin')
 const { analyzeStatsPattern, analyzeStatsPlugin } = require('../plugins/analyze-stats.plugin')
 const { recordEvents, recordPattern } = require('../plugins/record-events.plugin');
-require('../../node_modules/seneca')()
+require('seneca')()
     .use(collectMessagesPlugin)
     .use(processMessagesPlugin)
     .use(analyzeStatsPlugin)

@@ -1,4 +1,3 @@
-const { eventsPattern, latestEventsPattern } = require("./message-event-collector.plugin");
 const mongoose = require('mongoose');
 const MONGO_DB_CLOUD_URI = "mongodb+srv://collector_node:collector_node@socialevolutioncluster-kde4s.mongodb.net/socialEvolutionDb?retryWrites=true";
 const MessageEventModel = require('../models/message-event.model');

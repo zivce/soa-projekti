@@ -1,6 +1,6 @@
 const Express = require("express");
 const BodyParser = require("body-parser");
-const seneca = require('../../seneca')();
+const seneca = require('seneca')();
 const SenecaWeb = require('seneca-web');
 const expressSettings = require('../config/server.config');
 const { api } = require('../plugins/api.plugin');
