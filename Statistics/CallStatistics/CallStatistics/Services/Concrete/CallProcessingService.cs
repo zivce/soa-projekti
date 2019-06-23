@@ -79,8 +79,9 @@ namespace CallStatisticsService.Services.Concrete
             AnalyzeCallDuration(_collectedCallStats, out yIntercept, out slope);
             Dictionary<int, int> hourlyCongestion = createPredictedHourlyCongestion(yIntercept, slope);
             CallEvent callEvent = createEvent(hourlyCongestion);
-            InsertNewEvent(callEvent);
+            CallEvent insertedEvent = InsertNewEvent(callEvent);
             TriggerAlertEvent(callEvent);
+            SendCallsTelemetry(insertedEvent);
         }
 
         private List<CallDuration> ConvertCallsToStats(List<Call> calls)
@@ -139,7 +140,7 @@ namespace CallStatisticsService.Services.Concrete
 
         }
 
-        private void InsertNewEvent(CallEvent callEvent)
+        private CallEvent InsertNewEvent(CallEvent callEvent)
         {
             CallEvent callEventSerialized = new CallEvent(callEvent);
 
@@ -148,6 +149,7 @@ namespace CallStatisticsService.Services.Concrete
             callEventSerialized.BsonLeastCongestedHour = createBsonDocument(callEvent.LeastCongestedHour);
 
             _callStatsCollection.InsertOne(callEventSerialized);
+            return callEventSerialized;
         }
         private async void TriggerAlertEvent(CallEvent callEvent){
             using (HttpClient _client = new HttpClient())
@@ -159,6 +161,19 @@ namespace CallStatisticsService.Services.Concrete
 
             }
         }
+        private async void SendCallsTelemetry(CallEvent callEventSerialized) {
+            using (HttpClient _client = new HttpClient())
+            {
+                Console.WriteLine("Posting telemetry to mqtt..");
+                var jsonObject = JsonConvert.SerializeObject(new
+                 { callsTelemetry= callEventSerialized.BsonHourCongestion});
+                var content = new StringContent(jsonObject, Encoding.UTF8, "application/json");
+                await _client.PostAsync("http://172.17.0.1:34567/publish", content);
+
+            }
+        }
+        
+
 
         private BsonDocument createBsonDocument(object obj)
         {
