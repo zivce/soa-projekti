@@ -7,7 +7,7 @@ const fetch = require("../../node_modules/node-fetch");
 
 const MessageEventModel = require("../models/message-event.model");
 
-const EventPublisherEndpoint = "localhost:34567/publish";
+const EventPublisherEndpoint = "http://172.17.0.1:34567/publish";
 
 const MONGO_DB_CLOUD_URI =
   "mongodb+srv://collector_node:collector_node@socialevolutioncluster-kde4s.mongodb.net/socialEvolutionDb?retryWrites=true";
@@ -29,6 +29,7 @@ function recordEvents(options) {
   seneca.add(postEventPattern, (msg, res) => {
     const CurrentPrediction = msg.currentprediction;
     const data = { CurrentPrediction, LastUpdatedAt: new Date() };
+    console.log("Pre baze, message stats");
     const newEvent = new MessageEventModel(data);
     newEvent.save((err, event) => {
       console.log(event);
@@ -37,7 +38,7 @@ function recordEvents(options) {
         res(err, null);
         return;
       }
-      checkDataAndAlert(data);
+      // checkDataAndAlert(data);
       res(null, event._id);
     });
   });
@@ -67,8 +68,9 @@ function checkDataAndAlert(analyticsData) {
     const alertMsg = {
       msgType: "messagesServerStackOverflow"
     };
+    console.log("Alerting with mqtt")
     fetch(EventPublisherEndpoint, {
-      method: "post",
+      method: "POST",
       body: JSON.stringify(alertMsg),
       headers: { "Content-Type": "application/json" }
     })

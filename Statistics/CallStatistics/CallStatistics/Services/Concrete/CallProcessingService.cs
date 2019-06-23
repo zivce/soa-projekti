@@ -12,6 +12,9 @@ using System.Threading;
 using CallStatisticsService.Analytics;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson;
+using System.Net.Http;
+using System.Text;
+using Microsoft.AspNetCore.Http.Extensions; 
 
 namespace CallStatisticsService.Services.Concrete
 {
@@ -77,6 +80,7 @@ namespace CallStatisticsService.Services.Concrete
             Dictionary<int, int> hourlyCongestion = createPredictedHourlyCongestion(yIntercept, slope);
             CallEvent callEvent = createEvent(hourlyCongestion);
             InsertNewEvent(callEvent);
+            TriggerAlertEvent(callEvent);
         }
 
         private List<CallDuration> ConvertCallsToStats(List<Call> calls)
@@ -144,6 +148,16 @@ namespace CallStatisticsService.Services.Concrete
             callEventSerialized.BsonLeastCongestedHour = createBsonDocument(callEvent.LeastCongestedHour);
 
             _callStatsCollection.InsertOne(callEventSerialized);
+        }
+        private async void TriggerAlertEvent(CallEvent callEvent){
+            using (HttpClient _client = new HttpClient())
+            {
+                Console.WriteLine("Posting to mqtt..");
+                var jsonObject = JsonConvert.SerializeObject(new{msg="wasd"});
+                var content = new StringContent(jsonObject, Encoding.UTF8, "application/json");
+                await _client.PostAsync("http://172.17.0.1:34567/publish", content);
+
+            }
         }
 
         private BsonDocument createBsonDocument(object obj)

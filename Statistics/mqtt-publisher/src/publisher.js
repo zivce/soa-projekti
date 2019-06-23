@@ -49,8 +49,9 @@ function publishToMQTT(clients) {
     return (req, res) => {
         const { clientId, ...data } = req.body;
         clients
-            .filter(client => client.id === clientId)
+            // .filter(client => client.id === clientId)
             .forEach(client => {
+                console.log("Publishujem sad", data);
                 client.publish("v1/devices/me/telemetry", JSON.stringify(data));
             });
         res.send({ msg: "success" });
@@ -60,4 +61,4 @@ function publishToMQTT(clients) {
 module.exports = {
     initThingsBoardClients,
     publishToMQTT
-}
+};

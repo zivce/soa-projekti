@@ -5,7 +5,7 @@ const { collectMessagesPattern, collectMessagesPlugin } = require('../plugins/me
 const { processMessagesPattern, processMessagesPlugin } = require('../plugins/process-messages.plugin')
 const { analyzeStatsPattern, analyzeStatsPlugin } = require('../plugins/analyze-stats.plugin')
 const { recordEvents, recordPattern } = require('../plugins/record-events.plugin');
-require('seneca')()
+require('../../node_modules/seneca')()
     .use(collectMessagesPlugin)
     .use(processMessagesPlugin)
     .use(analyzeStatsPlugin)
@@ -46,10 +46,10 @@ require('seneca')()
                 console.error(error);
                 return;
             }
+            console.log('Pre set interval u msg stats. Messages fetched')
             setInterval(() => {
                 this.act({ ...processMessagesPattern, messages: messages }, messagesProcessed);
             }, 5000);
         }
-
         this.act(collectMessagesPattern, messagesFetched);
     })

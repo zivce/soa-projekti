@@ -8,12 +8,14 @@ services:
 
     aspnetcore_sensor:
         container_name: "sensor"
+        image: aspnetcore_sensor:latest
         build: "./SocialEvolutionSensorAPI"
         ports:
             - "55834:55834"
 
     aspnetcore_collector:
         container_name: "collector"
+        image: aspnetcore_collector:latest
         build: "./SocialEvolutionDataCollector"
         ports:
             - "55835:55835"
@@ -22,12 +24,21 @@ services:
 
     aspnetcore_call_statistics:
         container_name: "call_statistics"
+        image: aspnetcore_call_statistics:latest
         build: "./Statistics/CallStatistics/CallStatistics/"
         ports:
             - "55836:55836"
 
     nodejs_message_statistics:
         container_name: "message_statistics"
-        build: "./Statistics/MessageStatistics"
+        image: nodejs_message_statistics:latest
+        build: "./Statistics/MessageStatistics/"
         ports:
             - "55837:55837"
+
+    mqtt-publisher:
+        container_name: "mqtt_publisher"
+        image: mqtt-publisher:latest
+        build: "./Statistics/mqtt-publisher/"
+        ports:
+            - 34567:34567
