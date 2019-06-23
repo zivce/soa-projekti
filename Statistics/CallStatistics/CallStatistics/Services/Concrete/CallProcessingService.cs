@@ -153,7 +153,7 @@ namespace CallStatisticsService.Services.Concrete
             using (HttpClient _client = new HttpClient())
             {
                 Console.WriteLine("Posting to mqtt..");
-                var jsonObject = JsonConvert.SerializeObject(new{msg="wasd"});
+                var jsonObject = JsonConvert.SerializeObject(new{alert="callsCongestionLimitPassed"});
                 var content = new StringContent(jsonObject, Encoding.UTF8, "application/json");
                 await _client.PostAsync("http://172.17.0.1:34567/publish", content);
 

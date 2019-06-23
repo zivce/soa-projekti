@@ -36,7 +36,7 @@ function recordEvents(options) {
       }
       // fetch post to the mqttpublisher
       // fetch(data)
-      checkDataAndAlert({msg: "ipak radi"});
+      checkDataAndAlert();
       res(null, event._id);
     });
   });
@@ -64,7 +64,7 @@ function checkDataAndAlert(analyticsData) {
 
   if (shouldPublishAlert) {
     const alertMsg = {
-      msgType: "messagesServerStackOverflow"
+      alert: "messageCongestionLimitPassed"
     };
     console.log("Alerting with mqtt")
     fetch(EventPublisherEndpoint, {
