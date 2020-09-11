@@ -10,7 +10,7 @@
     "dependencies": {
         "devicehive-plugin-core": "1.1.4",
         "devicehive-proxy-message": "git+https://github.com/devicehive/devicehive-proxy-message.git",
-        "node-fetch": "2.6.0"
+        "node-fetch": "2.6.1"
     },
     "devDependencies": {},
     "scripts": {
