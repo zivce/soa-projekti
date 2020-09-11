@@ -14,7 +14,7 @@
     "express": "4.17.0",
     "ml-regression-simple-linear": "2.0.1",
     "mongoose": "5.5.9",
-    "node-fetch": "2.6.0",
+    "node-fetch": "2.6.1",
     "pm2": "3.5.1",
     "seneca": "3.10.0",
     "seneca-web": "2.2.1",
